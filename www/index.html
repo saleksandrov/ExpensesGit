@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <!--
+    <meta name="format-detection" content="telephone=no"/>-->
+
+ <!--   <meta name="viewport" content="user-scalable=no, initial-scale=2.0, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
+-->
+<!--
+    <meta name="viewport" content="user-scalable=no, initial-scale=2, maximum-scale=2, minimum-scale=2, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
+-->
+
+    <!--<link rel="stylesheet" type="text/css" href="css/index.css" />-->
+
+    <script type="text/javascript" src="resources/sap-ui-core.js"
+            id="sap-ui-bootstrap"
+            data-sap-ui-libs="sap.m"
+            data-sap-ui-theme="sap_bluecrystal">
+
+    </script>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/expenses_dao.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+
+    <script type="text/javascript" src="pages/main_page.js"></script>
+    <script type="text/javascript" src="pages/expense_card.js"></script>
+    <script type="text/javascript" src="pages/report_template.js"></script>
+    <script type="text/javascript" src="pages/report_cat_v2.js"></script>
+    <script type="text/javascript" src="pages/report_description.js"></script>
+
+   <link rel="stylesheet" type="text/css" href="css/index2.css" />
+
+   <title>Expenses</title>
+</head>
+
+<body class="sapUiBody" role="application" >
+
+    <script type="text/javascript">
+          app.initialize();
+          //document.addEventListener("deviceready", initDb, false);
+
+          initDb();
+          var sapUiApp = new sap.m.App("myApp", {initialPage:"MainPage"});
+          sapUiApp.addPage(mainPage);
+          sapUiApp.addPage(expense_card);
+          sapUiApp.addPage(report_cat);
+          sapUiApp.addPage(report_description);
+
+          sapUiApp.placeAt("content");
+    </script>
+
+    <div class="app" id="content">
+
+    </div>
+
+</body>
+
+</html>
