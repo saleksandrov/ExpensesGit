@@ -1,7 +1,6 @@
 var mainPage_fb = new sap.m.FlexBox({
                                items: [
                                  new sap.m.Button({
-                                    width: "50%",
                                     text: "Ввести затрату     ",
                                     press: function() {
                                                       sapUiApp.to("expense_card");
