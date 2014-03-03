@@ -24,7 +24,8 @@ var mainPage_fb = new sap.m.FlexBox({
                                justifyContent: "Center"
                              });
 
-var mainPage = new sap.m.Page("MainPage", {
+var mainPage = new sap.m.Page("MainPage",
+      {
           title: "Затраты",
           content: mainPage_fb
       });
