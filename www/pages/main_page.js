@@ -1,7 +1,7 @@
 var mainPage_fb = new sap.m.FlexBox({
                                items: [
                                  new sap.m.Button({
-                                    text: "Ввести затрату     ",
+                                    text: "Ввести затрату",
                                     press: function() {
                                                       sapUiApp.to("expense_card");
                                                   }
@@ -13,7 +13,7 @@ var mainPage_fb = new sap.m.FlexBox({
                                                         }
                                     }),
                                  new sap.m.Button({
-                                     text: "Подробный отчет   ",
+                                     text: "Подробный отчет",
                                      press: function() {
                                          sapUiApp.to("report_description");
                                      }
