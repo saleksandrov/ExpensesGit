@@ -47,7 +47,8 @@ function successCB() {
 function createExpense(expenseObj, cb) {
     var desc = expenseObj.desc;
     if (desc == null || desc.length == 0) {
-        desc = parseInt(expenseObj.date) +"."+parseInt(expenseObj.selectedMonth) + "." + parseInt(expenseObj.year);
+        //desc = parseInt(expenseObj.date) +"."+parseInt(expenseObj.selectedMonth) + "." + parseInt(expenseObj.year);
+        desc = "Нет описания";
     }
     getDb().transaction(
         function (tx) {
@@ -90,27 +91,51 @@ function getExpensesGroupByCategory(year, month) {
     return oModel;
 }
 
-function getExpenses(year, month) {
+function getExpenses(year, month, cb) {
     var oModel = new sap.ui.model.json.JSONModel();
-    //oModel.setJSON('{"getExpenses": [ {"name": "T", "amount": 200, "id" : 1}, {"name": "Test", "amount": 300, "id" : 2} ]}');
+    /*var reportData = {getExpenses: [], total: 0};
+    reportData.getExpenses = [
+        {name: "T", amount: 200, id : 1, category: "category", date: "12.222", month: "10"},
+        {name: "Test", amount: 300, id : 2, category: "category", date: "sdsd", month: "10"}
+    ];
+
+    var totalAmount = 0;
+    for (var i = 0; i < reportData.getExpenses.length; i++) {
+        totalAmount += reportData.getExpenses[i].amount;
+    }
+    reportData.total = totalAmount;
+    oModel.setData(reportData);
+*/
+    //oModel.setJSON('{"getExpenses": [ {"name": "T", "amount": 200, "id" : 1, "category": "category"}, {"name": "Test", "amount": 300, "id" : 2, "category": "category"} ]}');
+
 
     getDb().transaction(function (tx) {
-        tx.executeSql("SELECT id, description, amount from EXPENSES WHERE year=? AND month=?", [parseInt(year), parseInt(month)],
+        tx.executeSql("SELECT id, description, amount, category, date, month from EXPENSES WHERE year=? AND month=?", [parseInt(year), parseInt(month)],
             function (tx, results) {
                 if (results.rows.length > 0) {
-                    var jsonString = '{"getExpenses": [ ';
+                    //var jsonString = '{"getExpenses": [ ';
+                    var reportData = {getExpenses: [], total: 0};
+                    // WE START FROM 1 BECAUSE 0 reserved for total
                     for (var i = 0; i < results.rows.length; i++) {
                         var item = results.rows.item(i);
                         var desc = item.description;
-                        jsonString += '{"name": "' + desc + '", "amount": "' + item.amount + '", "id": "' + item.id + '"}';
-                        if (i < results.rows.length - 1) {
-                            jsonString += ", ";
-                        }
+                        reportData.getExpenses[i] = {name: desc, amount: item.amount, id : item.id, category: getCategoryById(item.category), date: item.date, month: item.month};
+                        //jsonString += '{"name": "' + desc + '", "amount": "' + item.amount + '", "id": "' + item.id + '"}';
+                        //if (i < results.rows.length - 1) {
+                        //    jsonString += ", ";
+                        //}
                     }
-                    jsonString += ' ] }';
-                    oModel.setJSON(jsonString);
+                    //jsonString += ' ] }';
+                    //oModel.setJSON(jsonString);
+
+                    var totalAmount = 0;
+                    for (var j = 0; j < reportData.getExpenses.length; j++) {
+                        totalAmount += reportData.getExpenses[j].amount;
+                    }
+                    reportData.total = totalAmount;
+                    oModel.setData(reportData);
                 }
-            }, errorReadExpense);
+            }, errorReadExpense, cb);
     }, errorReadExpense);
 
     return oModel;
@@ -120,10 +145,8 @@ function getExpenses(year, month) {
 function getAllContent() {
     console.log("~~~~~~~~~~~~~~~~~~~~~ starting getAllContent");
     getExpenses(2015,4);
-
     getExpenses(2014,1);
     getExpenses(2014,2);
-
 }
 
 function getCategoryById(cat) {
@@ -143,7 +166,18 @@ function getCategoryById(cat) {
         cat = "Дети";
     } else if (cat == 8) {
         cat = "Образование";
+    } else if (cat == 9) {
+        cat = "Транспорт";
+    } else if (cat == 10) {
+        cat = "Квартира";
+    } else if (cat == 11) {
+        cat = "Кафе/рестораны";
+    } else if (cat == 12) {
+        cat = "Спорт";
+    } else if (cat == 13) {
+        cat = "Банк";
     }
+
     return cat;
 
 }

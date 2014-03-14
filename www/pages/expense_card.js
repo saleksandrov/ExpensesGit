@@ -140,7 +140,12 @@ function expenseCardFrom() {
          new sap.ui.core.Item({key: "5", text: "Путешествия"}),
          new sap.ui.core.Item({key: "6", text: "Медицина"}),
          new sap.ui.core.Item({key: "7", text: "Дети"}),
-         new sap.ui.core.Item({key: "8", text: "Образование"})
+         new sap.ui.core.Item({key: "8", text: "Образование"}),
+         new sap.ui.core.Item({key: "9", text: "Транспорт"}),
+         new sap.ui.core.Item({key: "10", text: "Квартира"}),
+         new sap.ui.core.Item({key: "11", text: "Кафе/рестораны"}),
+         new sap.ui.core.Item({key: "12", text: "Спорт"}),
+         new sap.ui.core.Item({key: "13", text: "Банк"})
         ]
        });
     cat.bindProperty("selectedKey","/selectedCategory");

@@ -34,3 +34,8 @@
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
+
+.salesamount {
+    background: rgb(215, 245, 245);
+
+}

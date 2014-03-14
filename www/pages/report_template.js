@@ -29,7 +29,18 @@ function report(methodName, rt) {
             var year = sap.ui.getCore().getModel().getProperty("/year");
             var oModel;
             if (methodName === "getExpenses") {
-                oModel = getExpenses(year, month);
+                oModel = getExpenses(year, month, function() {
+
+                    var total = oModel.getProperty("/total");
+                    if (isNaN(total) || total == null) {
+                        total = 0;
+                    }
+                    rt.setHeaderText("Всего: " + total);
+                });
+
+                //sap.ui.getCore().byId("total_value").setText;
+                //sap.ui.getCore().setData({total: total});
+                //sap.ui.getCore().getModel().setProperty("/total", total);
             } else {
                 oModel = getExpensesGroupByCategory(year, month);
             }

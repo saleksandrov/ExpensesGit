@@ -1,18 +1,26 @@
 var rd_table = new sap.m.Table("rd1",{
     mode: "Delete",
     columns: [
-        new sap.m.Column({header: new sap.m.Label({text: "Описание", design: sap.m.LabelDesign.Bold}) }),
-        new sap.m.Column({header: new sap.m.Label({text: "Сумма", design: sap.m.LabelDesign.Bold}) })
+        new sap.m.Column({header: new sap.m.Label({text: "Описание", design: sap.m.LabelDesign.Bold}),  width: "70%"}),
+        new sap.m.Column({header: new sap.m.Label({text: "Сумма", design: sap.m.LabelDesign.Bold}), styleClass: "salesamount", width: "30%" })
     ]
 
 });
 
 rd_table.bindItems("/getExpenses", new sap.m.ColumnListItem({
     cells : [
-        new sap.m.Text({text : "{name}"}),
+        new sap.m.HBox( { items:[
+                new sap.m.Text({text : "("}),
+                new sap.m.Text({text : "{date}"}),
+                new sap.m.Text({text : "."}),
+                new sap.m.Text({text : "{month}"}),
+                new sap.m.Text({text : ") "}),
+                //new sap.m.Text({text : "{category}"}),
+                //new sap.m.Text({text : "-"}),
+                new sap.m.Text({text : "{name}"})]
+        }),
         new sap.m.Text({text : "{amount}"}),
         new sap.m.Text({text : "{id}"})
-
     ]
 
 }));
@@ -54,9 +62,11 @@ var report_description = new sap.m.Page("report_description", {
         var emptyTableModel = new sap.ui.model.json.JSONModel();
         emptyTableModel.setJSON(emptyTable);
         rd_table.setModel(emptyTableModel);
+        rd_table.setHeaderText("");
     },
     content: reportDescription()
 });
+
 
 function reportDescription() {
     return report("getExpenses", rd_table);
