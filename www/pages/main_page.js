@@ -7,7 +7,7 @@ var mainPage_fb = new sap.m.FlexBox({
                                                   }
                                     }),
                                  new sap.m.Button({
-                                    text: "Отчет по категориям",
+                                    text: "Отчет по категориям ",
                                     press: function() {
                                                       sapUiApp.to("report_cat");
                                                         }
