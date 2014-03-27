@@ -29,7 +29,7 @@ rd_table.bindItems("/getExpenses", new sap.m.ColumnListItem({
 rd_table.attachDelete(
     function(oEvent) {
         jQuery.sap.require("sap.m.MessageBox");
-        var name = oEvent.getParameter('listItem').getCells()[0].getText();
+        //var name = oEvent.getParameter('listItem').getCells()[0].getText();
         var amount = oEvent.getParameter('listItem').getCells()[1].getText();
         var id = oEvent.getParameter('listItem').getCells()[2].getText();
 
