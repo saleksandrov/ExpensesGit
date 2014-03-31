@@ -7,6 +7,7 @@ var rd_table = new sap.m.Table("rd1",{
 
 });
 
+
 rd_table.bindItems("/getExpenses", new sap.m.ColumnListItem({
     cells : [
         new sap.m.HBox( { items:[
@@ -21,6 +22,25 @@ rd_table.bindItems("/getExpenses", new sap.m.ColumnListItem({
         }),
         new sap.m.Text({text : "{amount}"}),
         new sap.m.Text({text : "{id}"})
+    ]
+
+}));
+
+
+var totalTable = new sap.m.Table("rdtt1",
+   {
+    columns: [
+        new sap.m.Column({header: new sap.m.Label({text: "", design: sap.m.LabelDesign.Bold}),  width: "70%"}),
+        new sap.m.Column({header: new sap.m.Label({text: "", design: sap.m.LabelDesign.Bold}),  width: "30%" })
+    ]
+
+}
+);
+
+totalTable.bindItems("/total", new sap.m.ColumnListItem({
+    cells : [
+        new sap.m.Label({text : "{name}", design: sap.m.LabelDesign.Bold}),
+        new sap.m.Label({text : "{amount}", design: sap.m.LabelDesign.Bold})
     ]
 
 }));
@@ -43,6 +63,7 @@ rd_table.attachDelete(
                     var year = sap.ui.getCore().getModel().getProperty("/year");
                     tableModel = getExpenses(year, month);
                     rd_table.setModel(tableModel);
+                    totalTable.setModel(tableModel);
                 }
         });
     }
@@ -58,17 +79,17 @@ var report_description = new sap.m.Page("report_description", {
         // empty form
         var oModel = sap.ui.getCore().getModel();
         initExpenseCard(oModel);
-        var emptyTable = '{"getExpenses": []}';
+        var emptyTable = '{"getExpenses": [], "total": []}';
         var emptyTableModel = new sap.ui.model.json.JSONModel();
         emptyTableModel.setJSON(emptyTable);
         rd_table.setModel(emptyTableModel);
-        rd_table.setHeaderText("");
+        totalTable.setModel(emptyTableModel);
     },
     content: reportDescription()
 });
 
 
 function reportDescription() {
-    return report("getExpenses", rd_table);
+    return report("getExpenses", rd_table, totalTable);
 }
 

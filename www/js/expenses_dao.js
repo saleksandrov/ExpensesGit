@@ -71,19 +71,20 @@ function getExpensesGroupByCategory(year, month) {
         tx.executeSql("select id, category, SUM(amount) as amount from EXPENSES WHERE year=? AND month=? GROUP BY category", [year, month],
             function (tx, results) {
                 if (results.rows.length > 0) {
-                    var jsonString = '{"getExpensesGroupByCategory": [ ';
+                    var reportData = {getExpensesGroupByCategory: [], total: [{name: "Всего", amount: 0}]};
                     for (var i = 0; i < results.rows.length; i++) {
                         var item = results.rows.item(i);
                         var cat = item.category;
                         cat = getCategoryById(cat);
 
-                        jsonString += '{"name": "' + cat + '", "amount": "' + item.amount + '"}';
-                        if (i < results.rows.length - 1) {
-                            jsonString += ", ";
-                        }
+                        reportData.getExpensesGroupByCategory[i] = {name: cat, amount: item.amount};
                     }
-                    jsonString += ' ] }';
-                    oModel.setJSON(jsonString);
+                    var totalAmount = 0;
+                    for (var j = 0; j < reportData.getExpensesGroupByCategory.length; j++) {
+                        totalAmount += reportData.getExpensesGroupByCategory[j].amount;
+                    }
+                    reportData.total[0].amount = totalAmount;
+                    oModel.setData(reportData);
                 }
             }, errorReadExpense);
     }, errorReadExpense);
@@ -91,9 +92,37 @@ function getExpensesGroupByCategory(year, month) {
     return oModel;
 }
 
-function getExpenses(year, month, cb) {
+function getExpenses(year, month) {
     var oModel = new sap.ui.model.json.JSONModel();
-    /*var reportData = {getExpenses: [], total: 0};
+
+    // For Test
+    //oModel.setData(getTestModel());
+
+    getDb().transaction(function (tx) {
+        tx.executeSql("SELECT id, description, amount, category, date, month from EXPENSES WHERE year=? AND month=?", [parseInt(year), parseInt(month)],
+            function (tx, results) {
+                if (results.rows.length > 0) {
+                    var reportData = {getExpenses: [], total: [{name: "Всего", amount: 0}]};
+                    for (var i = 0; i < results.rows.length; i++) {
+                        var item = results.rows.item(i);
+                        var desc = item.description;
+                        reportData.getExpenses[i] = {name: desc, amount: item.amount, id : item.id, category: getCategoryById(item.category), date: item.date, month: item.month};
+                    }
+                    var totalAmount = 0;
+                    for (var j = 0; j < reportData.getExpenses.length; j++) {
+                        totalAmount += reportData.getExpenses[j].amount;
+                    }
+                    reportData.total[0].amount = totalAmount;
+                    oModel.setData(reportData);
+                }
+            }, errorReadExpense);
+    }, errorReadExpense);
+
+    return oModel;
+}
+
+function getTestModel() {
+    var reportData = {getExpenses: [], total: [{name: "Всего", amount: 0}]};
     reportData.getExpenses = [
         {name: "T", amount: 200, id : 1, category: "category", date: "12.222", month: "10"},
         {name: "Test", amount: 300, id : 2, category: "category", date: "sdsd", month: "10"}
@@ -103,42 +132,8 @@ function getExpenses(year, month, cb) {
     for (var i = 0; i < reportData.getExpenses.length; i++) {
         totalAmount += reportData.getExpenses[i].amount;
     }
-    reportData.total = totalAmount;
-    oModel.setData(reportData);
-*/
-    //oModel.setJSON('{"getExpenses": [ {"name": "T", "amount": 200, "id" : 1, "category": "category"}, {"name": "Test", "amount": 300, "id" : 2, "category": "category"} ]}');
-
-
-    getDb().transaction(function (tx) {
-        tx.executeSql("SELECT id, description, amount, category, date, month from EXPENSES WHERE year=? AND month=?", [parseInt(year), parseInt(month)],
-            function (tx, results) {
-                if (results.rows.length > 0) {
-                    //var jsonString = '{"getExpenses": [ ';
-                    var reportData = {getExpenses: [], total: 0};
-                    // WE START FROM 1 BECAUSE 0 reserved for total
-                    for (var i = 0; i < results.rows.length; i++) {
-                        var item = results.rows.item(i);
-                        var desc = item.description;
-                        reportData.getExpenses[i] = {name: desc, amount: item.amount, id : item.id, category: getCategoryById(item.category), date: item.date, month: item.month};
-                        //jsonString += '{"name": "' + desc + '", "amount": "' + item.amount + '", "id": "' + item.id + '"}';
-                        //if (i < results.rows.length - 1) {
-                        //    jsonString += ", ";
-                        //}
-                    }
-                    //jsonString += ' ] }';
-                    //oModel.setJSON(jsonString);
-
-                    var totalAmount = 0;
-                    for (var j = 0; j < reportData.getExpenses.length; j++) {
-                        totalAmount += reportData.getExpenses[j].amount;
-                    }
-                    reportData.total = totalAmount;
-                    oModel.setData(reportData);
-                }
-            }, errorReadExpense, cb);
-    }, errorReadExpense);
-
-    return oModel;
+    reportData.total[0].amount = totalAmount;
+    return reportData;
 }
 
 // debug method
